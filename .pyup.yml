@@ -1,0 +1,4 @@
+# just want to receive security updates:
+update: insecure
+# only update weekly
+schedule: "every week"
