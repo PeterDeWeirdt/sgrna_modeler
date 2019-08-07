@@ -22,7 +22,4 @@ def test_nt_counts():
     A_content = sm.get_nt_count(encoded, 'A')
     np.testing.assert_array_equal(A_content, np.array([1,1,0,2,3]))
 
-def test_content(response):
-    """Sample pytest test function with the pytest fixture as an argument."""
-    # from bs4 import BeautifulSoup
-    # assert 'GitHub' in BeautifulSoup(response.content).title.string
+
