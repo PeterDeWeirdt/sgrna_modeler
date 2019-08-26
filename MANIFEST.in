@@ -4,6 +4,7 @@ include HISTORY.rst
 include LICENSE
 include README.rst
 
+recursive-include sgrna_modeler/datasets *.csv *.csv.gz *.rst *.jpg *.txt *.arff.gz *.json.gz
 recursive-include tests *
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
