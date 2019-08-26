@@ -8,6 +8,7 @@ nt_codes = {'A':[1,0,0,0],
             'C':[0,1,0,0],
             'G':[0,0,1,0],
             'T':[0,0,0,1]}
+
 def encode_seqs(seqs):
     # 3d array with samples x position x nt
     encoded_seqs = np.array([[nt_codes.get(x) for x in seq] for seq in seqs])
