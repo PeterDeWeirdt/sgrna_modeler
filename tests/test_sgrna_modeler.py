@@ -9,7 +9,7 @@ import os
 import numpy as np
 from sgrna_modeler import features as ft
 from sgrna_modeler import enzymes as en
-from sgrna_modeler import activity_data as da
+from sgrna_modeler import datasets as da
 
 def test_encoding(seqs=None):
     if seqs is None:
@@ -68,12 +68,16 @@ def test_pam_splits():
     assert (split2) == {'AGG', 'GGG', 'CGG'}
 
 def test_data_load():
-    fname = os.path.join(os.path.dirname(__file__), 'kim_2018_test.csv')
-    data = pd.read_csv(fname)
-    cas12a = en.Enzyme(guide_start=9, guide_length=23,
-                       pam_start=5, pams = ['TTTN'], context_length=34)
-    kim_2018_train = da.Activity_Data(data, cas12a, 'Context Sequence',
-                                      'Indel frequency')
-    x, y = kim_2018_train.get_xy()
-    assert x.shape == y.shape
-    assert kim_2018_train.enzyme.context_length == 34
+    # fname = os.path.join(os.path.dirname(__file__), 'kim_2018_test.csv')
+    # data = pd.read_csv(fname)
+    # cas12a = en.Enzyme(guide_start=9, guide_length=23,
+    #                    pam_start=5, pams = ['TTTN'], context_length=34)
+    # kim_2018_train = da.Activity_Data(data, cas12a, 'Context Sequence',
+    #                                   'Indel frequency')
+    # x, y = kim_2018_train.get_xy()
+    # assert x.shape == y.shape
+    # assert kim_2018_train.enzyme.context_length == 34
+    doench_train = da.load_doench_2016_train()
+    x, y = doench_train.get_xy()
+    print(x.shape)
+    assert y.shape[0] == x.shape[0]

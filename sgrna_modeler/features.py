@@ -184,9 +184,9 @@ def featurize_guides(kmers, features = None,
                     'Pos. Dep. 1mer', 'Pos. Dep. 2mer',
                     'GC content', 'Tm']
     possible_feats = {'Pos. Ind. 1mer', 'Pos. Ind. 2mer', 'Pos. Ind. 3mer',
-                        'Pos. Ind. Zipper','Pos. Dep. 1mer', 'Pos. Dep. 2mer',
-                        'Pos. Dep. 3mer', 'Pos. Dep. Zipper', 'Pos. Ind. Rep.',
-                        'GC content', 'Tm', 'Physio', 'Double Zipper'}
+                      'Pos. Ind. Zipper','Pos. Dep. 1mer', 'Pos. Dep. 2mer',
+                      'Pos. Dep. 3mer', 'Pos. Dep. Zipper', 'Pos. Ind. Rep.',
+                      'GC content', 'Tm', 'Physio', 'Double Zipper'}
     if not set(features).issubset(possible_feats):
         diff = features - possible_feats
         assert ValueError(str(diff) + 'Are not currently supported as features')
@@ -195,13 +195,9 @@ def featurize_guides(kmers, features = None,
     physiochemical_data = pd.read_csv(physio_path)
     k = len(kmers[0])
     context_order = get_context_order(k)
-    print('Context Order: ')
-    print(context_order)
     nts = ['A', 'C', 'T', 'G']
     feature_dict_list = []
     for i in range(len(kmers)):
-        if i % 1000 == 0:
-            print(str(i) + " guides coded")
         curr_dict = {}
         context = kmers[i]
         guide_sequence = get_guide_sequence(context, guide_start, guide_length)

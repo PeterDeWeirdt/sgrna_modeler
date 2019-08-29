@@ -39,6 +39,7 @@ setup(
     keywords='sgrna_modeler',
     name='sgrna_modeler',
     packages=find_packages(include=['sgrna_modeler']),
+    package_data={'sgrna_modeler': ['data/*.csv']},
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,

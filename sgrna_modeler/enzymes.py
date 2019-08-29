@@ -43,3 +43,6 @@ class Enzyme(object):
         self.pam_start = pam_start
         self.pams = pams
         self.context_length = context_length
+
+cas9 = Enzyme(context_length=30, guide_length=20, guide_start=5,
+              pam_start=25, pams=['TTTV'])
