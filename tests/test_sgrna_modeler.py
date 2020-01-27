@@ -117,13 +117,13 @@ def test_model_keras():
     train_model.fit(train_data)
     test_data = da.load_kim_2018_test()
     test_predictions = train_model.predict(test_data)
-    np.testing.assert_almost_equal(0.75, stats.pearsonr(test_predictions.y, test_predictions.prediction)[0], 2)
+    np.testing.assert_allclose(stats.pearsonr(test_predictions.y, test_predictions.prediction)[0],0.75, atol=5e-2)
 
     # load a model
     load_model = sg.Keras_sgrna_Model()
     load_model.load_weights()
     load_predictions = load_model.predict(test_data)
-    np.testing.assert_almost_equal(0.75, stats.pearsonr(load_predictions.y, load_predictions.prediction)[0], 2)
+    np.testing.assert_allclose(stats.pearsonr(load_predictions.y, load_predictions.prediction)[0], 0.75, atol=5e-2)
 
     # predict seqs
     x, y = test_data.get_xy()
@@ -137,7 +137,7 @@ def load_kim_2019_rs2():
                                name = 'km_2019_rs2')
     return data_class
 
-def test_model_doench2016():
+def test_model_sklearn():
     # train a model, compare with rs2
     train_model = sg.SKLearn_sgrna_Model()
     rs2_data = da.load_doench_2016()
@@ -152,7 +152,8 @@ def test_model_doench2016():
     load_model.load_model(sg.get_enPAM_GB(), en.cas12a, 'enPAM_GB')
     kim_2018_test = da.load_kim_2018_test()
     load_predictions = load_model.predict(kim_2018_test)
-    np.testing.assert_almost_equal(0.58, stats.pearsonr(load_predictions.y, load_predictions.prediction)[0], 2)
+    print(stats.pearsonr(load_predictions.y, load_predictions.prediction))
+    np.testing.assert_allclose(stats.pearsonr(load_predictions.y, load_predictions.prediction)[0], 0.58, atol = 5e-2)
 
 
 
