@@ -139,7 +139,7 @@ def load_kim_2019_rs2():
 
 def test_model_sklearn():
     # train a model, compare with rs2
-    train_model = sg.SKLearn_sgrna_Model()
+    train_model = sg.SKLearn_GB_sgrna_Model()
     rs2_data = da.load_doench_2016()
     train_model.fit(rs2_data)
     kim_2019_rs2_predictions = load_kim_2019_rs2()
@@ -148,7 +148,7 @@ def test_model_sklearn():
     assert stats.pearsonr(train_predictions['prediction'], kim_rs2_y)[0] > 0.9
 
     # load a model
-    load_model = sg.SKLearn_sgrna_Model()
+    load_model = sg.SKLearn_GB_sgrna_Model()
     load_model.load_model(sg.get_enPAM_GB(), en.cas12a, 'enPAM_GB')
     kim_2018_test = da.load_kim_2018_test()
     load_predictions = load_model.predict(kim_2018_test)

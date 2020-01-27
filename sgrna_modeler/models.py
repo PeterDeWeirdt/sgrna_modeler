@@ -103,7 +103,19 @@ def get_enPAM_GB():
     path = os.path.join(curr_path(), 'data/saved_models/enPAM_GB.joblib')
     return path
 
-class SKLearn_sgrna_Model(object):
+class SKLearn_GB_sgrna_Model(object):
+    """SKLearn gradient boosting for modeling sgRNA activity
+
+    Model the activity of guides using gradient boosting, as in:
+        Doench, John G., et al. "Optimized sgRNA design to maximize activity and minimize off-target \
+        effects of CRISPR-Cas9." Nature biotechnology 34.2 (2016): 184.
+
+    Parameters
+    ----------
+    val_frac : float, optional (default = 0.1)
+        fraction of data to use as a validation set for stopping. If set to None, then no stopping will occur
+    """
+
     def __init__(self, val_frac = 0.1, model = None, features = None):
         self.base_name = 'M_Doench_2016'
         self.val_frac = val_frac
