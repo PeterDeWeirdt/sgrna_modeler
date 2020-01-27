@@ -113,14 +113,14 @@ def test_data_load():
 def test_model_keras():
     # train a model
     train_data = da.load_kim_2018_train()
-    train_model = sg.Keras_sgrna_Model()
+    train_model = sg.KerasSgrnaModel()
     train_model.fit(train_data)
     test_data = da.load_kim_2018_test()
     test_predictions = train_model.predict(test_data)
     np.testing.assert_almost_equal(stats.pearsonr(test_predictions.y, test_predictions.prediction)[0],0.75, decimal=2)
 
     # load a model
-    load_model = sg.Keras_sgrna_Model()
+    load_model = sg.KerasSgrnaModel()
     load_model.load_weights()
     load_predictions = load_model.predict(test_data)
     np.testing.assert_almost_equal(stats.pearsonr(load_predictions.y, load_predictions.prediction)[0], 0.75, decimal=2)
@@ -139,7 +139,7 @@ def load_kim_2019_rs2():
 
 def test_model_sklearn():
     # train a model, compare with rs2
-    train_model = sg.SKLearn_GB_sgrna_Model()
+    train_model = sg.SklearnSgrnaModel()
     rs2_data = da.load_doench_2016()
     train_model.fit(rs2_data)
     kim_2019_rs2_predictions = load_kim_2019_rs2()

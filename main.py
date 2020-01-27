@@ -5,7 +5,7 @@ import pandas as pd
 import os
 
 if __name__ == '__main__':
-    models = [sg.SKLearn_GB_sgrna_Model(), sg.Keras_sgrna_Model()]
+    models = [sg.SklearnSgrnaModel(), sg.KerasSgrnaModel()]
     train_datum = [da.load_doench_2016_train(), da.load_meyers_2017_train(), da.load_kim_2019_train()]
     test_datum = [da.load_doench_2016_test(), da.load_meyers_2017_test(), da.load_kim_2019_test()]
 

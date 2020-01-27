@@ -14,6 +14,17 @@ def get_deepcpf1_weights():
     return path
 
 def build_kim2018(input_shape=(34, 4)):
+    """Build a model from Kim 2018
+
+    Parmeters
+    ---------
+    input_shape: tuple, optional (default (34, 4)
+        shape of the first layer of the model
+
+    Returns
+    -------
+    model: keras model object
+    """
     Input_SEQ = k.layers.Input(shape=input_shape)
     C1 = k.layers.Convolution1D(80, 5, activation='relu')(Input_SEQ)
     P1 = k.layers.AveragePooling1D(2)(C1)
@@ -29,7 +40,7 @@ def build_kim2018(input_shape=(34, 4)):
     model = k.models.Model(inputs = Input_SEQ, outputs = Output)
     return model
 
-class Keras_sgrna_Model(object):
+class KerasSgrnaModel(object):
     def __init__(self, random_state = 7, val_frac = 0.1, base_arc = None):
         self.base_name = 'M_Kim_2018'
         self.val_frac = val_frac
@@ -94,29 +105,16 @@ class Keras_sgrna_Model(object):
         predictions = self.model.predict(featurized_x).flatten()
         return predictions
 
-def get_rs2():
-    #path = os.path.join(curr_path(), 'data/saved_models/')
-    #return path
-    pass
-
-def get_enPAM_GB():
-    path = os.path.join(curr_path(), 'data/saved_models/enPAM_GB.joblib')
-    return path
-
-class SKLearn_GB_sgrna_Model(object):
-    """SKLearn gradient boosting for modeling sgRNA activity
-
-    Model the activity of guides using gradient boosting, as in:
-        Doench, John G., et al. "Optimized sgRNA design to maximize activity and minimize off-target \
-        effects of CRISPR-Cas9." Nature biotechnology 34.2 (2016): 184.
-
-    Parameters
-    ----------
-    val_frac : float, optional (default = 0.1)
-        fraction of data to use as a validation set for stopping. If set to None, then no stopping will occur
-    """
+class SklearnSgrnaModel(object):
+    """scikit-learn gradient boosting for modeling sgRNA activity"""
 
     def __init__(self, val_frac = 0.1, model = None, features = None):
+        """Initialize Sklearn GB Model
+
+        :param val_frac: validation fraction
+        :param model: sklearn gradient boosting model
+        :param features: list of features
+        """
         self.base_name = 'M_Doench_2016'
         self.val_frac = val_frac
         if model is None:
@@ -133,7 +131,6 @@ class SKLearn_GB_sgrna_Model(object):
         self.enzyme = None
         self.train_dataset = None
         self.train_name = None
-
 
     def load_model(self, model, enzyme, name):
         self.enzyme = enzyme
