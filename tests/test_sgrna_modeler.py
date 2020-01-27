@@ -117,13 +117,13 @@ def test_model_keras():
     train_model.fit(train_data)
     test_data = da.load_kim_2018_test()
     test_predictions = train_model.predict(test_data)
-    np.testing.assert_allclose(stats.pearsonr(test_predictions.y, test_predictions.prediction)[0],0.75, atol=5e-2)
+    np.testing.assert_almost_equal(stats.pearsonr(test_predictions.y, test_predictions.prediction)[0],0.75, decimal=2)
 
     # load a model
     load_model = sg.Keras_sgrna_Model()
     load_model.load_weights()
     load_predictions = load_model.predict(test_data)
-    np.testing.assert_allclose(stats.pearsonr(load_predictions.y, load_predictions.prediction)[0], 0.75, atol=5e-2)
+    np.testing.assert_almost_equal(stats.pearsonr(load_predictions.y, load_predictions.prediction)[0], 0.75, decimal=2)
 
     # predict seqs
     x, y = test_data.get_xy()
