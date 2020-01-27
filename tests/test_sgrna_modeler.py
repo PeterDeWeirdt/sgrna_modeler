@@ -148,12 +148,7 @@ def test_model_sklearn():
     assert stats.pearsonr(train_predictions['prediction'], kim_rs2_y)[0] > 0.9
 
     # load a model
-    load_model = sg.SKLearn_GB_sgrna_Model()
-    load_model.load_model(sg.get_enPAM_GB(), en.cas12a, 'enPAM_GB')
-    kim_2018_test = da.load_kim_2018_test()
-    load_predictions = load_model.predict(kim_2018_test)
-    print(stats.pearsonr(load_predictions.y, load_predictions.prediction))
-    np.testing.assert_allclose(stats.pearsonr(load_predictions.y, load_predictions.prediction)[0], 0.58, atol = 5e-2)
+    # TODO
 
 
 
