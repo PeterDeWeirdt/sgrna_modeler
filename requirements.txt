@@ -220,7 +220,7 @@ tables==3.5.2
 tb-nightly==1.15.0a20190817
 tblib==1.4.0
 tensorboard==1.14.0
-tensorflow==1.14.0
+tensorflow==1.15.0
 tensorflow-estimator==1.14.0
 tensorflow-estimator-2.0-preview==1.14.0.dev2019081701
 tensorflow-hub==0.5.0
