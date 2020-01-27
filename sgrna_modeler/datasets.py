@@ -6,13 +6,12 @@ def curr_path():
     return os.path.dirname(__file__)
 
 class Activity_Data(object):
-    def __init__(self, data, enzyme, kmer_column, activity_column, name, type,
+    def __init__(self, data, enzyme, kmer_column, activity_column, name,
                  group_column = ''):
         self.data = data
         self.enzyme = enzyme
         self.kmer_column = kmer_column
         self.activity_column = activity_column
-        self.type = type
         self.name = 'D_' + name
         self.group_column = group_column
     def get_xy(self):
@@ -24,58 +23,65 @@ class Activity_Data(object):
             assert ValueError('No Group Column Supplied')
         return self.data[self.group_column]
 
-# Sp Datasets
-def load_doench_2016_train():
-    data = pd.read_csv(os.path.join(curr_path(), 'data/Doench_2016_Train.csv'))
-    data_class = Activity_Data(data = data, enzyme = en.cas9, kmer_column='30mer',
-                               activity_column='score_drug_gene_rank',
-                               name = 'Doench_2016_Train',
-                               type = 'train',
-                               group_column='Target gene')
-    return data_class
+# SpCas9 Datasets
 
-def load_doench_2016_test():
-    data = pd.read_csv(os.path.join(curr_path(), 'data/Doench_2016_Test.csv'))
+def load_doench_2016():
+    data = pd.read_csv(os.path.join(curr_path(), 'data/datasets/Doench_2016.csv.zip'))
     data_class = Activity_Data(data = data, enzyme = en.cas9, kmer_column='30mer',
                                activity_column='score_drug_gene_rank',
-                               name = 'Doench_2016_Test',
-                               type = 'test',
+                               name = 'Doench_2016',
                                group_column='Target gene')
     return data_class
 
 def load_meyers_2017_train():
-    data = pd.read_csv(os.path.join(curr_path(), 'data/Meyers_2017_Train.csv'))
+    data = pd.read_csv(os.path.join(curr_path(), 'data/datasets/Meyers_2017_Train.csv.zip'))
     data_class = Activity_Data(data = data, enzyme = en.cas9, kmer_column='sgRNA context sequence',
                                activity_column='mean_activity',
                                name = 'Meyers_2017_Train',
-                               type = 'train',
-                               group_column='Gene Symbol')
+                               group_column = 'Gene Symbol')
     return data_class
 
 def load_meyers_2017_test():
-    data = pd.read_csv(os.path.join(curr_path(),'data/Meyers_2017_Test.csv'))
-    data_class = Activity_Data(data = data, enzyme = en.cas9, kmer_column='sgRNA context sequence',
+    data = pd.read_csv(os.path.join(curr_path(),'data/datasets/Meyers_2017_Test.csv.zip'))
+    data_class = Activity_Data(data = data, enzyme=en.cas9, kmer_column='sgRNA context sequence',
                                activity_column='mean_activity',
-                               name = 'Meyers_2017_Test',
-                               type = 'test',
+                               name='Meyers_2017_Test',
                                group_column='Gene Symbol')
     return data_class
 
 def load_kim_2019_train():
-    data = pd.read_csv(os.path.join(curr_path(),'data/Kim_2019_Train.csv'))
+    data = pd.read_csv(os.path.join(curr_path(),'data/datasets/Kim_2019_Train.csv.zip'))
     data_class = Activity_Data(data = data, enzyme = en.cas9,
                                kmer_column='Target context sequence (4+20+3+3)',
                                activity_column='Background subtracted indel (%)',
-                               name = 'Kim_2019_Train',
-                               type = 'train')
+                               name = 'Kim_2019_Train')
     return data_class
 
 def load_kim_2019_test():
-    data = pd.read_csv(os.path.join(curr_path(),'data/Kim_2019_Test.csv'))
+    data = pd.read_csv(os.path.join(curr_path(),'data/datasets/Kim_2019_Test.csv.zip'))
     data_class = Activity_Data(data = data, enzyme = en.cas9,
                                kmer_column='Target context sequence (4+20+3+3)',
                                activity_column='Background subtracted indel frequencies\r(average, %)',
-                               name = 'Kim_2019_Test',
-                               type = 'test')
+                               name = 'Kim_2019_Test')
     return data_class
+
+# AsCas12a datasets
+def load_kim_2018_train():
+    data = pd.read_csv(os.path.join(curr_path(),'data/datasets/Kim_2018_Train.csv.zip'))
+    data_class = Activity_Data(data = data, enzyme = en.cas12a,
+                               kmer_column='Context Sequence',
+                               activity_column='Indel frequency',
+                               name = 'Kim_2018_Train')
+    return data_class
+
+def load_kim_2018_test():
+    data = pd.read_csv(os.path.join(curr_path(),'data/datasets/Kim_2018_Test.csv.zip'))
+    data_class = Activity_Data(data = data, enzyme = en.cas12a,
+                               kmer_column='Context Sequence',
+                               activity_column='Indel frequency',
+                               name = 'Kim_2019_Test')
+    return data_class
+
+# enAsCas12a datasets
+
 

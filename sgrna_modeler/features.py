@@ -191,7 +191,7 @@ def featurize_guides(kmers, features = None,
         diff = features - possible_feats
         assert ValueError(str(diff) + 'Are not currently supported as features')
     current_path = os.path.abspath(os.path.dirname(__file__))
-    physio_path = os.path.join(current_path, 'physiochem.csv')
+    physio_path = os.path.join(current_path, 'data/features/physiochem.csv.zip')
     physiochemical_data = pd.read_csv(physio_path)
     k = len(kmers[0])
     context_order = get_context_order(k)
