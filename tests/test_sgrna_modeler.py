@@ -132,9 +132,9 @@ def test_model_keras():
 
 def load_kim_2019_rs2():
     data = pd.read_csv(os.path.join(curr_path(), 'test_data/kim_2019_rs2_predictions.csv.zip'))
-    data_class = da.Activity_Data(data = data, enzyme = en.cas9, kmer_column='Input String',
-                               activity_column='on-target',
-                               name = 'km_2019_rs2')
+    data_class = da.ActivityData(data = data, enzyme = en.cas9, kmer_column='Input String',
+                                 activity_column='on-target',
+                                 name = 'km_2019_rs2')
     return data_class
 
 def test_model_sklearn():
