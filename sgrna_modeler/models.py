@@ -42,7 +42,7 @@ def build_kim2018(input_shape=(34, 4)):
 
 class KerasSgrnaModel(object):
     def __init__(self, random_state = 7, val_frac = 0.1, base_arc = None):
-        self.base_name = 'M_Kim_2018'
+        self.base_name = 'Keras_CNN'
         self.val_frac = val_frac
         self.random_state = random_state
         if base_arc is None:
@@ -115,7 +115,7 @@ class SklearnSgrnaModel(object):
         :param model: sklearn gradient boosting model
         :param features: list of features
         """
-        self.base_name = 'M_Doench_2016'
+        self.base_name = 'Sklearn_GB'
         self.val_frac = val_frac
         if model is None:
             # Gradient boosted model

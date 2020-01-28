@@ -79,7 +79,7 @@ def load_kim_2018_test():
     data_class = Activity_Data(data = data, enzyme = en.cas12a,
                                kmer_column='Context Sequence',
                                activity_column='Indel frequency',
-                               name = 'Kim_2019_Test')
+                               name = 'Kim_2018_Test')
     return data_class
 
 # enAsCas12a datasets
