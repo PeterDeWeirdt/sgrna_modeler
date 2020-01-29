@@ -4,12 +4,14 @@
 """Tests for `sgrna_modeler` package."""
 
 import pandas as pd
+from pandas.util.testing import assert_frame_equal
 import os
 
 import numpy as np
 from sgrna_modeler import features as ft
 from sgrna_modeler import datasets as da
 from sgrna_modeler import models as sg
+from sgrna_modeler import mutagenesis as mu
 import sgrna_modeler.enzymes as en
 from scipy.stats import stats
 
@@ -150,6 +152,14 @@ def test_model_sklearn():
     # load a model
     # TODO
 
-
-
+def test_mutagenesis():
+    load_model = sg.KerasSgrnaModel()
+    load_model.load_weights()
+    deltas = mu.mutagenize_model(load_model, 500)
+    delta_summaries = (deltas.groupby(by = ['nt', 'position'])
+                       .agg({'delta': 'mean'})
+                       .reset_index())
+    np.array_equal(delta_summaries.nsmallest(1, 'delta')[['nt', 'position']].values,
+                   pd.DataFrame({'nt': ['T'], 'position': [8]}).values)
+    print()
 
