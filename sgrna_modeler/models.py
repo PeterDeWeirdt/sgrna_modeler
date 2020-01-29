@@ -5,6 +5,7 @@ from tensorflow import keras as k
 import pandas as pd
 import os
 from joblib import load
+import sgrna_modeler.enzymes as en
 
 def curr_path():
     return os.path.dirname(__file__)
@@ -14,7 +15,19 @@ def get_deepcpf1_weights():
     return path
 
 def build_kim2018(input_shape=(34, 4)):
-    """Build a model from Kim 2018
+    """
+    Build a convolutional neural network
+
+    From:
+    Kim, Hui Kwon, et al. "Deep learning improves prediction of CRISPR–Cpf1 guide RNA activity." \
+    Nature biotechnology 36.3 (2018): 239.
+
+    :param input_shape: guide length by nts (4)
+    :type input_shape: tuple
+    :return: CNN architecture
+    :rtype: keras Model object
+    """
+    """Build a Convolutional neural network model from Kim 2018
 
     Parmeters
     ---------
@@ -41,7 +54,28 @@ def build_kim2018(input_shape=(34, 4)):
     return model
 
 class KerasSgrnaModel(object):
+    """This class is for creating, training, and predicting guide activity with a Keras model
+
+    :param random_state: set random state in train/test split for reproducibility
+    :type random_stat: int
+    :param val_frac: amount of data to use for early stopping
+    :type val_frac: float
+    :param base_arc: base architecture to build neural network, defaults to build_kim2018
+    :type base_arc: function, which takes an input shape and returns a keras model
+
+    :Example:
+
+    >>> from sgrna_modeler import datasets as da
+    >>> from sgrna_modeler import models as sg
+    >>> train_data = da.load_kim_2018_train()
+    >>> train_model = sg.KerasSgrnaModel()
+    >>> train_model.fit(train_data)
+    >>> test_data = da.load_kim_2018_test()
+    >>> test_predictions = train_model.predict(test_data)
+    """
     def __init__(self, random_state = 7, val_frac = 0.1, base_arc = None):
+        """Constructor
+        """
         self.base_name = 'Keras_CNN'
         self.val_frac = val_frac
         self.random_state = random_state
@@ -55,19 +89,35 @@ class KerasSgrnaModel(object):
         self.model_history = None
         self.train_name = None
 
-    def load_weights(self, weights = None, name = None):
-        model = self.base_arc()
+    def load_weights(self, enzyme = None, weights = None, name = None):
+        """Load previously trained weights
+
+        :param enzyme: cas9 or cas12a
+        :type enyme: dict
+        :param weights: filepath to weights
+        :type weights: str
+        :param name: name of the model
+        :type name:str
+        """
         if weights is None:
-            deepcpf1_weights = get_deepcpf1_weights()
-            model.load_weights(deepcpf1_weights)
+            weights = get_deepcpf1_weights()
             self.train_name = 'Seq-DeepCpf1'
+            self.enzyme = en.cas12a
         else:
-            model.load_weights(weights)
             self.train_name = name
+            self.enzyme = enzyme
+        model = self.base_arc(input_shape = (self.enzyme['context_length'],4))
+        model.load_weights(weights)
         self.model = model
         return self
 
     def fit(self, train_dataset):
+        """ Fit a model to the training data
+
+        :param train_dataset: training data
+        :type train_dataset: :class:`sgrna_modeler.datasets.ActivityData`
+        :return: self
+        """
         self.train_dataset = train_dataset
         self.train_name = train_dataset.name
         self.enzyme = train_dataset.enzyme
@@ -86,6 +136,13 @@ class KerasSgrnaModel(object):
         return self
 
     def predict(self, test_dataset):
+        """Predict activity of test data
+
+        :param test_dataset: testing data
+        :type test_dataset: :class:`sgrna_modeler.datasets.ActivityData`
+        :return: dataframe of predictions and other meta information
+        :rtype: pandas dataframe
+        """
         x, y = test_dataset.get_xy()
         encoded_x = fe.encode_seqs(x)
         predictions = self.model.predict(encoded_x)
@@ -101,26 +158,45 @@ class KerasSgrnaModel(object):
         return out_data
 
     def predict_seqs(self, seqs):
+        """ Predict from sequences
+
+        :param seqs: sequences to predict
+        :return: numeric vector of predcitions
+        """
         featurized_x = fe.encode_seqs(seqs)
         predictions = self.model.predict(featurized_x).flatten()
         return predictions
 
 class SklearnSgrnaModel(object):
-    """scikit-learn gradient boosting for modeling sgRNA activity"""
+    """scikit-learn gradient boosting for modeling sgRNA activity
 
-    def __init__(self, val_frac = 0.1, model = None, features = None):
-        """Initialize Sklearn GB Model
+    :param random_state: set random state in train/test split for reproducibility
+    :type random_state: int
+    :param val_frac: amount of data to use for early stopping
+    :type val_frac: float
+    :param model: base model
+    :type model: sklearn GradientBoostingRegressor
+    :param features: features to model
+    :type features: list
 
-        :param val_frac: validation fraction
-        :param model: sklearn gradient boosting model
-        :param features: list of features
+    :Example:
+    >>> from sgrna_modeler import datasets as da
+    >>> from sgrna_modeler import models as sg
+    >>> train_model = sg.SklearnSgrnaModel()
+    >>> rs2_data = da.load_doench_2016()
+    >>> train_model.fit(rs2_data)
+    """
+    def __init__(self, random_state = 7, val_frac = 0.1, model = None, features = None):
+        """Constructor
         """
         self.base_name = 'Sklearn_GB'
         self.val_frac = val_frac
+        self.random_state = random_state
         if model is None:
             # Gradient boosted model
             self.model = ensemble.GradientBoostingRegressor(n_iter_no_change=20,
-                                                            validation_fraction = self.val_frac)
+                                                            validation_fraction = self.val_frac,
+                                                            random_state=self.random_state)
         else:
             self.model = model
         if features is None:
@@ -133,12 +209,27 @@ class SklearnSgrnaModel(object):
         self.train_name = None
 
     def load_model(self, model, enzyme, name):
+        """Load previously trained model
+
+        :param enzyme: cas9 or cas12a
+        :type enyme: dict
+        :param model: filepath to trained model
+        :type model: str (*.joblib)
+        :param name: name of the model
+        :type name:str
+        """
         self.enzyme = enzyme
         self.model = load(model)
         self.train_name = name
         return self
 
     def fit(self, train_dataset):
+        """ Fit a model to the training data
+
+        :param train_dataset: training data
+        :type train_dataset: :class:`sgrna_modeler.datasets.ActivityData`
+        :return: self
+        """
         self.train_name = train_dataset.name
         self.enzyme = train_dataset.enzyme
         train_val_x, y = train_dataset.get_xy()
@@ -149,6 +240,13 @@ class SklearnSgrnaModel(object):
         return self
 
     def predict(self, test_dataset):
+        """Predict activity of test data
+
+        :param test_dataset: testing data
+        :type test_dataset: :class:`sgrna_modeler.datasets.ActivityData`
+        :return: dataframe of predictions and other meta information
+        :rtype: pandas dataframe
+        """
         x, y = test_dataset.get_xy()
         featurized_x = fe.featurize_guides(x, features=self.features,
                                            guide_start=test_dataset.enzyme['guide_start'],
@@ -166,6 +264,11 @@ class SklearnSgrnaModel(object):
         return out_data
 
     def predict_seqs(self, seqs):
+        """ Predict from sequences
+
+        :param seqs: sequences to predict
+        :return: numeric vector of predcitions
+        """
         featurized_x = fe.featurize_guides(seqs, features=self.features,
                                            guide_start=self.enzyme['guide_start'],
                                            guide_length=self.enzyme['guide_length'])
