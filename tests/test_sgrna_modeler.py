@@ -161,7 +161,7 @@ def test_model_sklearn():
 
 def test_mutagenesis():
     load_model = sg.KerasSgrnaModel()
-    load_model.load_weights()
+    load_model.load_weights(sg.get_deepcpf1_weights(), en.cas12a, 'Seq-DeepCpf1')
     deltas = mu.mutagenize_model(load_model, 500)
     delta_summaries = (deltas.groupby(by = ['nt', 'position'])
                        .agg({'delta': 'mean'})
