@@ -36,6 +36,14 @@ sgrna\_modeler.models module
    :undoc-members:
    :show-inheritance:
 
+sgrna\_modeler.mutagenesis module
+---------------------------------
+
+.. automodule:: sgrna_modeler.mutagenesis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Module contents
 ---------------
