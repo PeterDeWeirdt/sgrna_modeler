@@ -41,7 +41,7 @@ setup(
     name='sgrna_modeler',
     packages=find_packages(include=['sgrna_modeler']),
     package_data={'sgrna_modeler': ['data/datasets/*.csv.zip', 'data/features/*.csv.zip',
-                                    'data/saved_models/*.h5']},
+                                    'data/saved_models/*.h5', 'data/saved_models/*.joblib']},
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
