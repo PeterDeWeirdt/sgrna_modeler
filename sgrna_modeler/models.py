@@ -14,6 +14,10 @@ def get_deepcpf1_weights():
     path = os.path.join(curr_path(), 'data/saved_models/Seq_deepCpf1_weights_tf.h5')
     return path
 
+def get_enpam_gb():
+    path = os.path.join(curr_path(), 'data/saved_models/enPAM_GB.joblib')
+    return path
+
 def build_kim2018(input_shape=(34, 4)):
     """
     Build a convolutional neural network
@@ -89,7 +93,7 @@ class KerasSgrnaModel(object):
         self.model_history = None
         self.train_name = None
 
-    def load_weights(self, enzyme = None, weights = None, name = None):
+    def load_weights(self, weights, enzyme, name):
         """Load previously trained weights
 
         :param enzyme: cas9 or cas12a

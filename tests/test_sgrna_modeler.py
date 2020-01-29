@@ -123,7 +123,7 @@ def test_model_keras():
 
     # load a model
     load_model = sg.KerasSgrnaModel()
-    load_model.load_weights()
+    load_model.load_weights(sg.get_deepcpf1_weights(), en.cas12a, 'Seq-DeepCpf1')
     load_predictions = load_model.predict(test_data)
     np.testing.assert_almost_equal(stats.pearsonr(load_predictions.y, load_predictions.prediction)[0], 0.75, decimal=2)
 
@@ -150,7 +150,14 @@ def test_model_sklearn():
     assert stats.pearsonr(train_predictions['prediction'], kim_rs2_y)[0] > 0.9
 
     # load a model
-    # TODO
+    enpam_gb = sg.get_enpam_gb()
+    load_model = sg.SklearnSgrnaModel()
+    load_model.load_model(enpam_gb, en.cas12a, 'enPAM_GB')
+    kim_2018 = da.load_kim_2018_test()
+    x, y = kim_2018.get_xy()
+    predictions = load_model.predict_seqs(x)
+    np.testing.assert_almost_equal(stats.pearsonr(y, predictions)[0], 0.57, decimal = 2)
+
 
 def test_mutagenesis():
     load_model = sg.KerasSgrnaModel()
@@ -161,5 +168,4 @@ def test_mutagenesis():
                        .reset_index())
     np.array_equal(delta_summaries.nsmallest(1, 'delta')[['nt', 'position']].values,
                    pd.DataFrame({'nt': ['T'], 'position': [8]}).values)
-    print()
 
