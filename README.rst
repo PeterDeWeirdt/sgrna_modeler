@@ -15,7 +15,7 @@ sgRNA Modeler
 
 
 .. image:: https://pyup.io/repos/github/peterdeweirdt/sgrna_modeler/shield.svg
-     :target: https://pyup.io/repos/github/peterdeweirdt/sgrna_modeler/
+     :target: https://pyup.io/repos/github/PeterDeWeirdt/sgrna_modeler/
      :alt: Updates
 
 
